@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { ExternalLink, Github } from "lucide-react";
+import { ExternalLink, Github, Triangle } from "lucide-react";
 
 interface Project {
   id: string;
@@ -11,6 +11,7 @@ interface Project {
   githubUrl?: string;
   liveUrl?: string;
   status: "completed" | "in-progress" | "concept" | "revamp";
+  quality?: 1 | 2 | 3 | 4 | 5;
   image?: string;
 }
 
@@ -33,10 +34,28 @@ const projects: Project[] = [
     ],
     githubUrl: "https://github.com/bugrabasbostanci/barber-app",
     liveUrl: "https://the-barbershop.vercel.app/",
-    status: "in-progress",
+    status: "revamp",
+    quality: 4,
   },
+
   {
     id: "2",
+    title: "Funny Yellow",
+    description:
+      "A high-quality sticker platform built with Next.js, focusing on providing free stickers for WhatsApp and other messaging platforms.",
+    technologies: [
+      "Next.js 15",
+      "TypeScript",
+      "Tailwind CSS v4",
+      "Shadcn/ui",
+      "React Context",
+    ],
+    githubUrl: "https://github.com/bugrabasbostanci/funny-yellow",
+    status: "in-progress",
+    quality: 3,
+  },
+  {
+    id: "3",
     title: "Tablio",
     description:
       "Tablio, web sayfalarındaki tabloları kolayca Excel, CSV, PDF, JSON ve Markdown formatlarına dönüştürmenizi sağlayan kullanıcı dostu bir araçtır.",
@@ -52,10 +71,11 @@ const projects: Project[] = [
     ],
     githubUrl: "https://github.com/bugrabasbostanci/tablio?tab=readme-ov-file",
     liveUrl: "https://tablio-deu.pages.dev/",
-    status: "revamp",
+    status: "completed",
+    quality: 2,
   },
   {
-    id: "3",
+    id: "4",
     title: "Tatar Oto Kaporta Landing Page",
     description:
       "Tatar Oto Kaporta'nın resmi web sitesi. Next.js ve TailwindCSS ile geliştirilmiş modern ve hızlı bir web uygulaması. Kullanıcı dostu arayüzü ve gelişmiş performansıyla müşterilerimize en iyi hizmeti sunmayı hedefliyoruz.",
@@ -63,6 +83,7 @@ const projects: Project[] = [
     githubUrl: "https://github.com/bugrabasbostanci/tatar-oto-kaporta",
     liveUrl: "https://www.tatarotokaporta.com/",
     status: "completed",
+    quality: 1,
   },
 ];
 
@@ -77,11 +98,30 @@ const statusStyles = {
     "bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400",
 };
 
+const qualityColors = {
+  1: "text-gray-400",
+  2: "text-blue-400",
+  3: "text-yellow-400",
+  4: "text-red-400",
+  5: "text-indigo-400 ",
+};
+
 const statusLabels = {
   completed: "Completed",
   "in-progress": "In Progress",
   concept: "Concept",
   revamp: "Revamping",
+};
+
+const renderQualityIcon = (quality: number) => {
+  return (
+    <Triangle
+      size={16}
+      className={`${
+        qualityColors[quality as keyof typeof qualityColors]
+      } fill-current`}
+    />
+  );
 };
 
 export function Projects() {
@@ -94,18 +134,21 @@ export function Projects() {
         >
           <CardContent className="p-6">
             <CardHeader className="p-0 mb-4">
-              <div className="flex items-center gap-3">
-                <h3 className="text-lg font-medium text-primary group-hover:text-ring transition-colors">
-                  {project.title}
-                </h3>
-                <Badge
-                  variant="secondary"
-                  className={`text-xs px-2 py-1 ${
-                    statusStyles[project.status]
-                  }`}
-                >
-                  {statusLabels[project.status]}
-                </Badge>
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-lg font-medium text-primary group-hover:text-ring transition-colors">
+                    {project.title}
+                  </h3>
+                  <Badge
+                    variant="secondary"
+                    className={`text-xs px-2 py-1 ${
+                      statusStyles[project.status]
+                    }`}
+                  >
+                    {statusLabels[project.status]}
+                  </Badge>
+                </div>
+                {project.quality && renderQualityIcon(project.quality)}
               </div>
             </CardHeader>
 
